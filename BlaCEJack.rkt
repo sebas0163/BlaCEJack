@@ -51,15 +51,14 @@
 
 ;funcion que administra el mazo del jugador/crupier
 ;MyDeck: cartas en mi mazo
-;MyDeckValue: Valor numerico de mi mazo
 ;MainDeck: Baraja principal, o sea, es la baraja inglesa
 ;elem: numero de cartas restantes en la baraja principal
 
 ;my deck value se podria ignorar* 
-(define (PlayerDeck MyDeck MyDeckValue MainDeck elem)
+(define (houseDeck MyDeck MainDeck elem)
   (cond ((> (sumarCartas MyDeck 0 #f) 21) (list (sumarCartas MyDeck 0 #f) (mostrarCartas MyDeck) "has perdido"))
         ((and (>= (sumarCartas MyDeck 0 #f) 17) (<= (sumarCartas MyDeck 0 #f) 21)) (list (sumarCartas MyDeck 0 #f) (mostrarCartas MyDeck)))
-        (else (PlayerDeck (cons (GetCard MainDeck elem 0) MyDeck) (sumarCartas MyDeck 0 #f) (DeleteCard MainDeck (GetCard MainDeck elem 0)) (random (length MainDeck))))))
+        (else (houseDeck (cons (GetCard MainDeck elem 0) MyDeck) (DeleteCard MainDeck (GetCard MainDeck elem 0)) (random (length MainDeck))))))
 
 
 ;Función que obtiene una lista y cambia los valores 11,12 13 y 14 por A,J,Q y K
@@ -72,10 +71,6 @@
         ((=(car list) 14) (cons 'K (mostrarCartas (cdr list))))
         (else (cons (car list) (mostrarCartas (cdr list))))
    ))
-
-        
-(PlayerDeck '() 0 '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52))
-
 
 ;Función que obtiene una lista de la suma de la suma de las cartas de cada jugador (la mesa primero) y dice quien fue el ganador
 ;listValJug: lista con la suma de las cartas de los jugadores
@@ -91,4 +86,20 @@
         (else (ganador (cdr listValJug) (car listValJug) jugGanador (+ jugAnalizado 1)))
         ))
 
-(ganador '( 16 17 17 21) 0 0 1)
+;(ganador '( 16 17 17 21) 0 0 1)
+
+;Función que pregunta al usuario si quiere continuar jugando
+(define (seguirJugando?)
+  (cond ((equal? (read-line) "s") #t)
+        (else #f)
+        ))
+
+;Función para empezar el juego con 1 jugador
+;MyDeck: cartas en mi mazo
+;MainDeck: Baraja principal, o sea, es la baraja inglesa
+;elem: numero de cartas restantes en la baraja principal
+(define (unJugador myDeck mainDeck elem)
+  (cond ((or (equal? (seguirJugando?) #f) (> (sumarCartas myDeck 0 #f) 21)) (cons (sumarCartas myDeck 0 #f) (houseDeck '() mainDeck (random (length mainDeck)))))
+        (else  (unJugador (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))) (sumarCartas myDeck 0 #f))))
+
+(unJugador '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52))
