@@ -57,7 +57,7 @@
 ;my deck value se podria ignorar* 
 (define (houseDeck MyDeck MainDeck elem)
   (cond ((> (sumarCartas MyDeck 0 #f) 21) (list (sumarCartas MyDeck 0 #f) (mostrarCartas MyDeck) "has perdido"))
-        ((and (>= (sumarCartas MyDeck 0 #f) 17) (<= (sumarCartas MyDeck 0 #f) 21)) (list (sumarCartas MyDeck 0 #f) (mostrarCartas MyDeck)))
+        ((and (>= (sumarCartas MyDeck 0 #f) 17) (<= (sumarCartas MyDeck 0 #f) 21)) (list (list (sumarCartas MyDeck 0 #f) (mostrarCartas MyDeck))))
         (else (houseDeck (cons (GetCard MainDeck elem 0) MyDeck) (DeleteCard MainDeck (GetCard MainDeck elem 0)) (random (length MainDeck))))))
 
 
@@ -99,7 +99,33 @@
 ;MainDeck: Baraja principal, o sea, es la baraja inglesa
 ;elem: numero de cartas restantes en la baraja principal
 (define (unJugador myDeck mainDeck elem)
-  (cond ((or (equal? (seguirJugando?) #f) (> (sumarCartas myDeck 0 #f) 21)) (cons (sumarCartas myDeck 0 #f) (houseDeck '() mainDeck (random (length mainDeck)))))
-        (else  (unJugador (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))) (sumarCartas myDeck 0 #f))))
+  (cond ((<(length myDeck) 2) (unJugador (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))))
+        ((or (equal? (seguirJugando?) #f) (> (sumarCartas myDeck 0 #f) 21)) (cons (list(sumarCartas myDeck 0 #f) myDeck) (houseDeck '() mainDeck (random (length mainDeck)))))
+        (else  (unJugador (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))))))
 
-(unJugador '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52))
+;Función para empezar el juego con 2 jugadores
+;MyDeck: cartas en mi mazo
+;MainDeck: Baraja principal, o sea, es la baraja inglesa
+;elem: numero de cartas restantes en la baraja principal
+(define (dosJugadores myDeck mainDeck elem)
+  (cond ((<(length myDeck) 2) (dosJugadores (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))))
+        ((or (equal? (seguirJugando?) #f) (> (sumarCartas myDeck 0 #f) 21)) (cons (list(sumarCartas myDeck 0 #f) myDeck) (unJugador '() mainDeck (random (length mainDeck)))))
+        (else  (dosJugadores (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))))))
+
+;Función para empezar el juego con 3 jugadores
+;MyDeck: cartas en mi mazo
+;MainDeck: Baraja principal, o sea, es la baraja inglesa
+;elem: numero de cartas restantes en la baraja principal
+(define (tresJugadores myDeck mainDeck elem)
+  (cond ((<(length myDeck) 2) (tresJugadores (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))))
+        ((or (equal? (seguirJugando?) #f) (> (sumarCartas myDeck 0 #f) 21)) (cons (list(sumarCartas myDeck 0 #f) myDeck) (dosJugadores '() mainDeck (random (length mainDeck)))))
+        (else  (tresJugadores (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))))))
+
+(define (jugar list)
+  (cond ((= (length list) 1) (unJugador '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52)))
+        ((= (length list) 2) (dosJugadores '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52)))
+        ((= (length list) 3) (tresJugadores '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52)))
+        ))
+
+;(tresJugadores '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52))
+(jugar '("pedro" "juan" "esteban"))
