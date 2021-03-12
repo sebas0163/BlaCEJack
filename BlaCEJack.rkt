@@ -56,7 +56,7 @@
 
 ;my deck value se podria ignorar* 
 (define (houseDeck MyDeck MainDeck elem)
-  (cond ((> (sumarCartas MyDeck 0 #f) 21) (list (sumarCartas MyDeck 0 #f) (mostrarCartas MyDeck) "has perdido"))
+  (cond ((> (sumarCartas MyDeck 0 #f) 21) (list (sumarCartas MyDeck 0 #f) (mostrarCartas MyDeck) ))
         ((and (>= (sumarCartas MyDeck 0 #f) 17) (<= (sumarCartas MyDeck 0 #f) 21)) (list (list (sumarCartas MyDeck 0 #f) (mostrarCartas MyDeck))))
         (else (houseDeck (cons (GetCard MainDeck elem 0) MyDeck) (DeleteCard MainDeck (GetCard MainDeck elem 0)) (random (length MainDeck))))))
 
@@ -122,10 +122,24 @@
         (else  (tresJugadores (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))))))
 
 (define (jugar list)
-  (cond ((= (length list) 1) (unJugador '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52)))
+  (cond ((= (length list) 1) (unJugador '() '((2 C)  (2 P) 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52)))
         ((= (length list) 2) (dosJugadores '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52)))
         ((= (length list) 3) (tresJugadores '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52)))
         ))
 
 ;(tresJugadores '() '(2 2 2 2 3 3 3 3 4 4 4 4 5 5 5 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9 10 10 10 10 11 11 11 11 12 12 12 12 13 13 13 13 14 14 14 14) (random 52))
-(jugar '("pedro" "juan" "esteban"))
+;(jugar '("pedro" "juan" "esteban"))
+
+;'((2 C) (2 P) (2 D) (2 T)
+;    (3 C) (3 P) (3 D) (3 T)
+;    (4 C) (4 P) (4 D) (4 T)
+;    (5 C) (5 P) (5 D) (5 T)
+;    (6 C) (6 P) (6 D) (6 T)
+;    (7 C) (7 P) (7 D) (7 T)
+;    (8 C) (8 P) (8 D) (8 T)
+;    (9 C) (9 P) (9 D) (9 T)
+;    (10 C) (10 P) (10 D) (10 T)
+;    (11 C) (11 P) (11 D) (11 T)
+;    (12 C) (12 P) (12 D) (12 T)
+;    (13 C) (13 P) (13 D) (13 T)
+;    (14 C) (14 P) (14 D) (14 T))
