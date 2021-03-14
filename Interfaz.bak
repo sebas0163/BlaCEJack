@@ -4,7 +4,11 @@
                  (d 2 3 4 5 6 7 8 9 10 11 12 13 14)
                  (p 2 3 4 5 6 7 8 9 10 11 12 13 14)
                  (t 2 3 4 5 6 7 8 9 10 11 12 13 14)))
-(define Jugador1 '((p)))
+(define imagenes '((1t.png 2t.png 3t.png 4t.png 5t.png 6t.png 7t.png 8t.png 9t.png 10t.png 11t.png 12t.png 13t.png)
+                   (1c.png 2c.png 3c.png 4c.png 5c.png 6c.png 7c.png 8c.png 9c.png 10c.png 11c.png 12c.png 13c.png)
+                   (1d.png 2d.png 3d.png 4d.png 5d.png 6d.png 7d.png 8d.png 9d.png 10d.png 11d.png 12d.png 13d.png)
+                   (1p.png 2p.png 3p.png 4p.png 5p.png 6p.png 7p.png 8p.png 9p.png 10p.png 11p.png 12p.png 13p.png)))
+(define Jugador1 '(()))
 (define Jugador2 '(()))
 (define Jugador3 '(()))
 
@@ -24,9 +28,8 @@
   ((draw-string ventana)(make-posn 200 580) "JUGADOR 1")
   ((draw-string ventana)(make-posn 220 615) "Pedir")
   ((draw-string ventana)(make-posn 220 665) "dejar")
-  ;(dibujarCarta 300 400 ventana "p.png")
-  ;(dibujarCarta 345 400 ventana "p.png")
-  (revisarCartas Jugador1 ventana))
+  (dibujarCarta 300 400 ventana)
+  (dibujarCarta 345 400 ventana))
 ; Función que dibuja la mesa para dos jugador
 ; Parametro view-port de la pantalla principal
 (define (dosJugadores ventana)
@@ -62,11 +65,5 @@
   ((draw-string ventana)(make-posn 40 55) "Pedir")
   ((draw-string ventana)(make-posn 40 115) "dejar"))
 
-; Función que dibuja la carta en la posición deseada
-
-(define (dibujarCarta posX posY ventana carta) ;especificar cada cuanto se corre
-  ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posX posY)))
-; Función que revisa la ultima carta agregada al maso del jugador 
-(define (revisarCartas jugador ventana)
-  (cond((null? (car jugador))(print "no hay cartas"))
-        (else(dibujarCarta 300 550 ventana (~a(caar jugador)".png")))))
+(define (dibujarCarta posX posY ventana)
+  ((draw-pixmap ventana)"p.png"(make-posn posX posY)))
