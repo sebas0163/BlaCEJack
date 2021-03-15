@@ -76,7 +76,29 @@
   ((draw-string ventana)(make-posn 920 65) "Pedir")
   ((draw-string ventana)(make-posn 920 115) "dejar")
   ((draw-string ventana)(make-posn 40 65) "Pedir")
-  ((draw-string ventana)(make-posn 40 115) "dejar"))
+  ((draw-string ventana)(make-posn 40 115) "dejar")
+  #|(mostrarPuntaje "100" ventana 1)
+  (mostrarPuntaje "100" ventana 2)
+  (mostrarPuntaje "100" ventana 3)
+  (mostrarPuntaje "100" ventana 4)|#)
+
+; Funcion que dibuja el puntaje obtenido por cada jugador
+(define (mostrarPuntaje puntaje ventana numJugador)
+  (cond
+    ((= 1 numJugador)((draw-string ventana)(make-posn 200 530) puntaje))
+    ((= 2 numJugador)((draw-string ventana)(make-posn 900 35) puntaje))
+    ((= 3 numJugador)((draw-string ventana)(make-posn 100 35) puntaje))
+    ((= 4 numJugador)((draw-string ventana)(make-posn 200 40) puntaje))
+    ))
+; Funcion que lanza un cuadro de dialogo al finalizar la partida 
+(define (ganador jugador crupier)
+  (define emergente (open-viewport "Ganador" 500 200))
+  ((draw-solid-rectangle emergente)(make-posn 0 0) 500 200 "black")
+  (cond
+    ((or(and(> crupier jugador)(<= crupier 21 ))(and(< crupier jugador)(<= crupier 21 )))((draw-string emergente)(make-posn 75 100 ) "La casa gana, el jugador ha perdido" "white"))
+    ((or(and (> jugador crupier)(<= jugador 21))(and(< jugador crupier)(<= jugador 21 )))((draw-string emergente)(make-posn 200 100 ) "¡Felicitaciones has ganado!" "white"))
+    (else((draw-string emergente)(make-posn 250 100 ) "EMPATE" "white"))
+    ))
 
 ;EVENTOS CON EL MOUSE
 ;DESACTIVAR "BOTONES"
@@ -94,5 +116,7 @@
 ;;;;;;;;;;;;;;;;;; Conexion con la lógica;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define (pedirCartas jugador ventana)
   (revisarCartas jugador ventana))
+; Función que acaba con el turno
+(define (dejar jugador ventana)(print "El puntaje obtenido es de "))
 
 (bCEj 3)
