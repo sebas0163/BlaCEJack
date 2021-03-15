@@ -23,12 +23,12 @@
 ; recibe un "boolean" para saber si posee un As (As) debe ser #f 
 (define (sumarCartas list val As)
   (cond ((null? list) (revisarAs val As))
-        ((or(= (car list) 12);Identifica si es una J
-            (= (car list) 13);Identifica si es una Q
-            (= (car list) 14));Identifica si es una K
+        ((or(= (caar list) 12);Identifica si es una J
+            (= (caar list) 13);Identifica si es una Q
+            (= (caar list) 14));Identifica si es una K
             (sumarCartas (cdr list) (+ val 10) As))
-        ((equal? (car list) 11) (sumarCartas (cdr list) (+ val 11) #t))
-        (else (sumarCartas (cdr list) (+ val (car list)) As))
+        ((equal? (caar list) 11) (sumarCartas (cdr list) (+ val 11) #t))
+        (else (sumarCartas (cdr list) (+ val (caar list)) As))
   ))
 
 
@@ -39,7 +39,7 @@
 (define (DeleteCard lista elemento)
   (cond
     [(null? lista) empty]
-    [(equal? elemento (car lista))(DeleteCard (cdr lista) elemento)]
+    [(equal? elemento (caar lista))(DeleteCard (cdr lista) elemento)]
     [else (cons (car lista) (DeleteCard (cdr lista) elemento))]
     ))
 
@@ -65,11 +65,11 @@
 ;list lista de las cartas de un jugador
 (define (mostrarCartas list)
   (cond ((null? list) '())
-        ((=(car list) 11) (cons 'A (mostrarCartas (cdr list))))
-        ((=(car list) 12) (cons 'J (mostrarCartas (cdr list))))
-        ((=(car list) 13) (cons 'Q (mostrarCartas (cdr list))))
-        ((=(car list) 14) (cons 'K (mostrarCartas (cdr list))))
-        (else (cons (car list) (mostrarCartas (cdr list))))
+        ((=(caar list) 11) (cons 'A (mostrarCartas (cdr list))))
+        ((=(caar list) 12) (cons 'J (mostrarCartas (cdr list))))
+        ((=(caar list) 13) (cons 'Q (mostrarCartas (cdr list))))
+        ((=(caar list) 14) (cons 'K (mostrarCartas (cdr list))))
+        (else (cons (caar list) (mostrarCartas (cdr list))))
    ))
 
 ;Función que obtiene una lista de la suma de la suma de las cartas de cada jugador (la mesa primero) y dice quien fue el ganador
