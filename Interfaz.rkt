@@ -13,20 +13,25 @@
                  (12 c) (12 p) (12 d) (12 t)
                  (13 c) (13 p) (13 d) (13 t)
                  (14 c) (14 p) (14 d) (14 t)))
-(define Jugador1 '((p)))
+(define Jugador1 '(((5 c)(9 p))20))
 (define Jugador2 '(((3 t)(5 c)(9 p))20))
-(define Jugador3 '(()))
+(define Jugador3 '(((3 t)(5 c)(9 p))20))
+(define crupier '(((3 t)(5 c)(9 p))20))
+(define posx 300)
+(define posY 140)
+(define turno 1)
+(define ventana 0)
 
 ; Inicio de la ejecución
-(define (bCEj x)(define ventana (open-viewport "ventana" 1000 700))
+(define (bCEj x)(set! ventana (open-viewport "ventana" 1000 700))
   ((draw-solid-rectangle ventana)(make-posn 0 0) 1000 700 "Sea green")
   (cond
-    ((= x 1)(unJugador ventana))
-    ((= x 2)(dosJugadores ventana))
-    ((= x 3)(tresJugadores ventana))))
+    ((= x 1)(unJugador))
+    ((= x 2)(dosJugadores))
+    ((= x 3)(tresJugadores))))
 ; Función que dibuja la mesa para un jugador
 ; Parametro view-port de la pantalla principal
-(define (unJugador ventana)
+(define (unJugador)
   ((draw-solid-rectangle ventana)(make-posn 200 590) 75 40 "gray")
   ((draw-solid-rectangle ventana)(make-posn 200 640) 75 40 "gray")
   ((draw-string ventana)(make-posn 200 80) "CRUPIER")
@@ -37,10 +42,11 @@
   ((draw-string ventana)(make-posn 220 665) "dejar")
   ;(dibujarCarta 300 400 ventana "p.png")
   ;(dibujarCarta 345 400 ventana "p.png")
-  (revisarCartas Jugador2 ventana))
+  ;(revisarCartas Jugador2 ventana)
+  )
 ; Función que dibuja la mesa para dos jugador
 ; Parametro view-port de la pantalla principal
-(define (dosJugadores ventana)
+(define (dosJugadores)
   ((draw-solid-rectangle ventana)(make-posn 900 45) 75 40 "gray")
   ((draw-solid-rectangle ventana)(make-posn 900 90) 75 40 "gray")
   ((draw-solid-rectangle ventana)(make-posn 200 590) 75 40 "gray")
@@ -56,7 +62,7 @@
   ((draw-string ventana)(make-posn 920 65) "Pedir")
   ((draw-string ventana)(make-posn 920 115) "dejar"))
 ; Función que dibuja la mesa para tres
-(define (tresJugadores ventana)
+(define (tresJugadores)
   ((draw-solid-rectangle ventana)(make-posn 20 45) 75 40 "gray")
   ((draw-solid-rectangle ventana)(make-posn 20 90) 75 40 "gray")
   ((draw-solid-rectangle ventana)(make-posn 900 45) 75 40 "gray")
@@ -80,10 +86,15 @@
   #|(mostrarPuntaje "100" ventana 1)
   (mostrarPuntaje "100" ventana 2)
   (mostrarPuntaje "100" ventana 3)
-  (mostrarPuntaje "100" ventana 4)|#)
+  (mostrarPuntaje "100" ventana 4)|#
+  ;(revisarCartas Jugador2 ventana)
+;(revisarCartas Jugador2 ventana)
+  ;(pedirCartas ventana )
+  ;(pedirCartas ventana )
+  (inicio Jugador1))
 
 ; Funcion que dibuja el puntaje obtenido por cada jugador
-(define (mostrarPuntaje puntaje ventana numJugador)
+(define (mostrarPuntaje puntaje numJugador)
   (cond
     ((= 1 numJugador)((draw-string ventana)(make-posn 200 530) puntaje))
     ((= 2 numJugador)((draw-string ventana)(make-posn 900 35) puntaje))
@@ -94,6 +105,7 @@
 (define (ganador jugador crupier)
   (define emergente (open-viewport "Ganador" 500 200))
   ((draw-solid-rectangle emergente)(make-posn 0 0) 500 200 "black")
+  
   (cond
     ((or(and(> crupier jugador)(<= crupier 21 ))(and(< crupier jugador)(<= crupier 21 )))((draw-string emergente)(make-posn 75 100 ) "La casa gana, el jugador ha perdido" "white"))
     ((or(and (> jugador crupier)(<= jugador 21))(and(< jugador crupier)(<= jugador 21 )))((draw-string emergente)(make-posn 200 100 ) "¡Felicitaciones has ganado!" "white"))
@@ -101,22 +113,56 @@
     ))
 
 ;EVENTOS CON EL MOUSE
-;DESACTIVAR "BOTONES"
-;Mejor método de aumentar posiciones 
+;DESACTIVAR "BOTONES
+
+;Funcion que dibuja las primeras dos cartas
+(define (inicio jugador)
+  (dibujarCarta (~a(~a(caaar jugador)(cadr(caar jugador)))".png")) (dibujarCarta (~a(~a(caadr(car jugador))(cadr(cadr(car jugador))))".png")))
 
 ; Función que dibuja la carta en la posición deseada
 
-(define (dibujarCarta posX posY ventana carta) ;especificar cada cuanto se corre
-  ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posX posY)))
+(define (dibujarCarta carta)
+  (cond((= turno 1) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posx 550))(set! posx (+ posx 35)))
+       ((= turno 2) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 875 posY))(set! posY (+ posY 35)))
+       ((= turno 3) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 15 posY))(set! posY (+ posY 35)))
+       (else ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posx 10))(set! posx (+ posx 35)))
+  ))
 ; Función que revisa la ultima carta agregada al maso del jugador 
-(define (revisarCartas jugador ventana)
+(define (revisarCartas jugador)
   (cond((null? (car jugador))(print "no hay cartas"))
-        (else(dibujarCarta 300 550 ventana (~a(~a(caaar jugador)(cadr(caar jugador)))".png")))))
+        (else(dibujarCarta (~a(~a(caar jugador)(cadr(car jugador)))".png")))))
 
+; Función que dibuja las cartas del crupier
+(define (masoCrupier maso puntaje)
+  (cond
+    ((null? maso)(mostrarPuntaje (number->string puntaje) 4))
+    (else(dibujarCarta (~a(~a(caar maso)(cadr(car maso))) ".png"))(sleep 1)(masoCrupier (cdr maso) puntaje))
+
+  ))
 ;;;;;;;;;;;;;;;;;; Conexion con la lógica;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(define (pedirCartas jugador ventana)
-  (revisarCartas jugador ventana))
+(define (pedirCartas);hacer las llamadas a la lógica 
+  (cond
+    ((= turno 1)
+     (cond
+       ((null? (car Jugador1))#|agregar llamada a lógica|#(inicio Jugador1))
+       (else (set! Jugador1 (cons '(2 t)(car Jugador1) ))(revisarCartas Jugador1))))
+    ((= turno 2)
+     (cond
+       ((null? (car Jugador2))(inicio Jugador2 ventana))
+       (else (set! Jugador2 (cons '(2 t)(car Jugador2) ))(revisarCartas Jugador2))))
+    ((= turno 3)
+     (cond
+       ((null? (car Jugador3))(inicio Jugador3 ventana))
+       (else(set! Jugador3 (cons '(2 t)(car Jugador3) ))(revisarCartas Jugador3))))
+    ))
+       
 ; Función que acaba con el turno
-(define (dejar jugador ventana)(print "El puntaje obtenido es de "))
+(define (dejar)
+  (cond((= turno 1)(set! turno 4)(set! posx 300)(masoCrupier (car Jugador2) 20)(set! turno 2))
+       ((= turno 2)(set! turno 3)(set! posY 140))
+       ((= turno 3)(set! turno 4))
+       ))
+
+
 
 (bCEj 3)
