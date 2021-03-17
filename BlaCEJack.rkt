@@ -39,16 +39,22 @@
         ((= num (+ cont 1)) (car lista))
         (else (GetCard (cdr lista) num (+ cont 1))))) 
 
+
+
+(define (houseDeck MyDeck MainDeck)
+        (houseDeckAux MyDeck MainDeck (random (length MainDeck))))
+
+
 ;funcion que administra el mazo del jugador/crupier
 ;MyDeck: cartas en mi mazo
 ;MainDeck: Baraja principal, o sea, es la baraja inglesa
 ;elem: numero de cartas restantes en la baraja principal
 ;my deck value se podria ignorar*
 
-(define (houseDeck MyDeck MainDeck elem)
-  (cond ((> (sumarCartas MyDeck 0 #f) 21) (list (sumarCartas MyDeck 0 #f) MyDeck))
-        ((and (>= (sumarCartas MyDeck 0 #f) 17) (<= (sumarCartas MyDeck 0 #f) 21)) (list (list (sumarCartas MyDeck 0 #f) MyDeck)))
-        (else (houseDeck (cons (GetCard MainDeck elem 0) MyDeck) (DeleteCard MainDeck (GetCard MainDeck elem 0)) (random (length MainDeck))))))
+(define (houseDeckAux MyDeck MainDeck elem)
+  (cond ((> (sumarCartas MyDeck 0 #f) 21) (list (list MyDeck (sumarCartas MyDeck 0 #f)) MainDeck))
+        ((and (>= (sumarCartas MyDeck 0 #f) 17) (<= (sumarCartas MyDeck 0 #f) 21)) (list (list MyDeck (sumarCartas MyDeck 0 #f)) MainDeck))
+        (else (houseDeckAux (cons (GetCard MainDeck elem 0) MyDeck) (DeleteCard MainDeck (GetCard MainDeck elem 0)) (random (length MainDeck))))))
 
 ;(define (turno myDeck mainDeck)
 ;  (cond ((> (sumarCartas  myDeck 0 #f) 21) (list myDeck mainDeck))
@@ -59,10 +65,10 @@
         
 (define (turnoAux myDeck mainDeck elem)
         (cond ((< (length myDeck) 1) (turnoAux (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (random (length mainDeck))))
-              (else (list (cons (GetCard mainDeck elem 0) myDeck) (DeleteCard mainDeck (GetCard mainDeck elem 0)) (sumarCartas (cons (GetCard mainDeck elem 0) myDeck) 0 #f)))
+              (else (list (list (cons (GetCard mainDeck elem 0) myDeck) (sumarCartas (cons (GetCard mainDeck elem 0) myDeck) 0 #f) ) (DeleteCard mainDeck (GetCard mainDeck elem 0)) ))
               ))
 
-(turno '() '((2 c) (2 p) (2 d) (2 t)(3 c) (3 p) (3 d) (3 t)(4 c) (4 p) (4 d) (4 t)(5 c) (5 p) (5 d) (5 t)(6 c) (6 p) (6 d) (6 t)(7 c) (7 p) (7 d) (7 t)(8 c) (8 p) (8 d) (8 t)(9 c) (9 p) (9 d) (9 t)(10 c) (10 p) (10 d) (10 t)(11 c) (11 p) (11 d) (11 t)(12 c) (12 p) (12 d) (12 t)(13 c) (13 p) (13 d) (13 t)(14 c) (14 p) (14 d) (14 t)))
+(houseDeck '() '((2 c) (2 p) (2 d) (2 t)(3 c) (3 p) (3 d) (3 t)(4 c) (4 p) (4 d) (4 t)(5 c) (5 p) (5 d) (5 t)(6 c) (6 p) (6 d) (6 t)(7 c) (7 p) (7 d) (7 t)(8 c) (8 p) (8 d) (8 t)(9 c) (9 p) (9 d) (9 t)(10 c) (10 p) (10 d) (10 t)(11 c) (11 p) (11 d) (11 t)(12 c) (12 p) (12 d) (12 t)(13 c) (13 p) (13 d) (13 t)(14 c) (14 p) (14 d) (14 t)))
 
 ;(houseDeck '() '((2 c) (2 p) (2 d) (2 t)(3 c) (3 p) (3 d) (3 t)(4 c) (4 p) (4 d) (4 t)(5 c) (5 p) (5 d) (5 t)(6 c) (6 p) (6 d) (6 t)(7 c) (7 p) (7 d) (7 t)(8 c) (8 p) (8 d) (8 t)(9 c) (9 p) (9 d) (9 t)(10 c) (10 p) (10 d) (10 t)(11 c) (11 p) (11 d) (11 t)(12 c) (12 p) (12 d) (12 t)(13 c) (13 p) (13 d) (13 t)(14 C) (14 P) (14 D) (14 T)) (random 52))
 ; (sumarCartas '((14 T) (9 p) (6 p)) 0 #f)
