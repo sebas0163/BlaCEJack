@@ -13,23 +13,26 @@
                  (12 c) (12 p) (12 d) (12 t)
                  (13 c) (13 p) (13 d) (13 t)
                  (14 c) (14 p) (14 d) (14 t)))
-(define Jugador1 '(((5 c)(9 p))20))
+(define Jugador1 '(((3 t)(5 c)(9 p))20))
 (define Jugador2 '(((3 t)(5 c)(9 p))20))
 (define Jugador3 '(((3 t)(5 c)(9 p))20))
 (define crupier '(((3 t)(5 c)(9 p))20))
 (define posx 300)
 (define posY 140)
-(define turno 3)
+(define turno 1)
 (define ventana 0)
 (define puntajeObtenido 0)
-
+(define jugadores 0)
+(define casa #t)
 ; Inicio de la ejecución
 (define (bCEj x)(set! ventana (open-viewport "ventana" 1000 700))
+  (set! jugadores x)
   ((draw-solid-rectangle ventana)(make-posn 0 0) 1000 700 "Sea green")
   (cond
     ((= x 1)(unJugador))
     ((= x 2)(dosJugadores))
-    ((= x 3)(tresJugadores))))
+    ((= x 3)(tresJugadores)))
+  (prueba))
 ; Función que dibuja la mesa para un jugador
 ; Parametro view-port de la pantalla principal
 (define (unJugador)
@@ -92,8 +95,7 @@
 ;(revisarCartas Jugador2 ventana)
   ;(pedirCartas ventana )
   ;(pedirCartas ventana )
-  (inicio Jugador1)
-  (prueba)
+  ;(inicio Jugador1)
   )
 
 ; Funcion que dibuja el puntaje obtenido por cada jugador
@@ -102,18 +104,21 @@
     ((= 1 numJugador)((draw-string ventana)(make-posn 200 530) puntaje))
     ((= 2 numJugador)((draw-string ventana)(make-posn 900 35) puntaje))
     ((= 3 numJugador)((draw-string ventana)(make-posn 100 35) puntaje))
-    ((= 4 numJugador)((draw-string ventana)(make-posn 200 40) puntaje)(set! puntajeObtenido 0))
+    ((= 4 numJugador)((draw-string ventana)(make-posn 200 40) puntaje))
     ))
 ; Funcion que lanza un cuadro de dialogo al finalizar la partida 
-(define (ganador jugador crupier)
+(define (ganador crupier)
   (define emergente (open-viewport "Ganador" 500 200))
   ((draw-solid-rectangle emergente)(make-posn 0 0) 500 200 "black")
   
   (cond
-    ((or(and(> crupier jugador)(<= crupier 21 ))(and(< crupier jugador)(<= crupier 21 )))((draw-string emergente)(make-posn 75 100 ) "La casa gana, el jugador ha perdido" "white"))
-    ((or(and (> jugador crupier)(<= jugador 21))(and(< jugador crupier)(<= jugador 21 )))((draw-string emergente)(make-posn 200 100 ) "¡Felicitaciones has ganado!" "white"))
+    ((or(and(> crupier puntajeObtenido)(<= crupier 21 ))(and(< crupier puntajeObtenido)(<= crupier 21 )))((draw-string emergente)(make-posn 75 100 ) "La casa gana, el jugador ha perdido" "white"))
+    ((or(and (> puntajeObtenido crupier)(<= puntajeObtenido 21))(and(< puntajeObtenido crupier)(<= puntajeObtenido 21 )))((draw-string emergente)(make-posn 200 100 ) "¡Felicitaciones has ganado!" "white"))
     (else((draw-string emergente)(make-posn 250 100 ) "EMPATE" "white"))
-    ))
+    )
+  (sleep 3)
+  (close-viewport emergente)
+  (reset))
 
 ;EVENTOS CON EL MOUSE
 ;DESACTIVAR "BOTONES
@@ -125,10 +130,10 @@
 ; Función que dibuja la carta en la posición deseada
 
 (define (dibujarCarta carta)
-  (cond((= turno 1) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posx 550))(set! posx (+ posx 35)))
-       ((= turno 2) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 875 posY))(set! posY (+ posY 35)))
-       ((= turno 3) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 15 posY))(set! posY (+ posY 35)))
-       (else ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posx 10))(set! posx (+ posx 35)))
+  (cond((and(= turno 1)casa) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posx 550))(set! posx (+ posx 35)))
+       ((and(= turno 2)casa) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 875 posY))(set! posY (+ posY 35)))
+       ((and(= turno 3)casa) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 15 posY))(set! posY (+ posY 35)))
+       ((equal? casa #f) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posx 10))(set! posx (+ posx 35)))
   ))
 ; Función que revisa la ultima carta agregada al maso del jugador 
 (define (revisarCartas jugador)
@@ -138,13 +143,15 @@
 ; Función que dibuja las cartas del crupier
 (define (masoCrupier maso puntaje)
   (cond
-    ((null? maso)(mostrarPuntaje (number->string puntaje) 4))
+    ((null? maso)(mostrarPuntaje (number->string puntaje) 4)(ganador puntaje)(set! casa #t))
     (else(dibujarCarta (~a(~a(caar maso)(cadr(car maso))) ".png"))(sleep 1)(masoCrupier (cdr maso) puntaje))
 
   ))
 ;;;;;;;;;;;;;;;;;;; EVENTOS DEL MOUSE;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define (prueba)
-         (cond
+  (cond((and(> turno jugadores)(not(= turno 4)))
+        (close-viewport ventana))
+        (else (cond
            ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))95)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))20)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))85)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))40)(= turno 3))
             (pedirCartas))
            ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))95)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))20)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))130)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))90)(= turno 3))
@@ -152,13 +159,23 @@
            ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))975)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))900)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))85)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))45)(= turno 2))
             (pedirCartas))
            ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))975)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))900)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))130)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))90)(= turno 2))
-            (print "dejar j2"))
+            (dejar))
            ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))275)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))200)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))630)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))590)(= turno 1))
             (pedirCartas))
            ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))275)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))200)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))680)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))640)(= turno 1))
-            (print "dejar j1")))
-         (prueba)
-  )
+            (dejar)))
+         (prueba))
+         
+  ))
+(define (reset)
+  ((draw-solid-rectangle ventana)(make-posn 0 0) 1000 700 "Sea green")
+  (set! puntajeObtenido 0)
+  (set! posx 300)
+  (set! crupier '(((3 t)(5 c)(9 p))20))
+  (cond
+    ((= jugadores 1)(unJugador))
+    ((= jugadores 2)(dosJugadores))
+    ((= jugadores 3)(tresJugadores))))
 
 ;;;;;;;;;;;;;;;;;; Conexion con la lógica;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define (pedirCartas);hacer las llamadas a la lógica 
@@ -179,12 +196,12 @@
        
 ; Función que acaba con el turno
 (define (dejar)
-  (cond((= turno 1)(set! turno 4)(set! puntajeObtenido (cadr Jugador1))(mostrarPuntaje (number->string puntajeObtenido)1)(set! posx 300)(masoCrupier (car Jugador2) 20)(set! turno 2))
-       ((= turno 2)(set! turno 4)(set! puntajeObtenido (cadr Jugador2))(mostrarPuntaje(number->string puntajeObtenido)2)(set! posY 140)(masoCrupier (car Jugador2) 20)(set! turno 3))
-       ((= turno 3)(set! turno 4)(set! puntajeObtenido (cadr Jugador3))(mostrarPuntaje(number->string puntajeObtenido)3)(set! posY 140)(masoCrupier (car Jugador2) 20))
+  (cond((= turno 1)(set! turno 2)(set! casa #f)(set! puntajeObtenido (cadr Jugador1))(mostrarPuntaje (number->string puntajeObtenido)1)(set! posx 300)(masoCrupier (car crupier) 20))
+       ((= turno 2)(set! turno 3)(set! casa #f)(set! puntajeObtenido (cadr Jugador2))(mostrarPuntaje(number->string puntajeObtenido)2)(set! posY 140)(masoCrupier (car crupier) 20))
+       ((= turno 3)(set! turno 5)(set! casa #f)(set! puntajeObtenido (cadr Jugador3))(mostrarPuntaje(number->string puntajeObtenido)3)(set! posY 140)(masoCrupier (car crupier) 20))
        ))
 
 
 
-(bCEj 3)
+(bCEj 2)
 
