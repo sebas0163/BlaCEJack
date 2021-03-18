@@ -19,8 +19,9 @@
 (define crupier '(((3 t)(5 c)(9 p))20))
 (define posx 300)
 (define posY 140)
-(define turno 1)
+(define turno 3)
 (define ventana 0)
+(define puntajeObtenido 0)
 
 ; Inicio de la ejecución
 (define (bCEj x)(set! ventana (open-viewport "ventana" 1000 700))
@@ -91,7 +92,9 @@
 ;(revisarCartas Jugador2 ventana)
   ;(pedirCartas ventana )
   ;(pedirCartas ventana )
-  (inicio Jugador1))
+  (inicio Jugador1)
+  (prueba)
+  )
 
 ; Funcion que dibuja el puntaje obtenido por cada jugador
 (define (mostrarPuntaje puntaje numJugador)
@@ -99,7 +102,7 @@
     ((= 1 numJugador)((draw-string ventana)(make-posn 200 530) puntaje))
     ((= 2 numJugador)((draw-string ventana)(make-posn 900 35) puntaje))
     ((= 3 numJugador)((draw-string ventana)(make-posn 100 35) puntaje))
-    ((= 4 numJugador)((draw-string ventana)(make-posn 200 40) puntaje))
+    ((= 4 numJugador)((draw-string ventana)(make-posn 200 40) puntaje)(set! puntajeObtenido 0))
     ))
 ; Funcion que lanza un cuadro de dialogo al finalizar la partida 
 (define (ganador jugador crupier)
@@ -139,6 +142,24 @@
     (else(dibujarCarta (~a(~a(caar maso)(cadr(car maso))) ".png"))(sleep 1)(masoCrupier (cdr maso) puntaje))
 
   ))
+;;;;;;;;;;;;;;;;;;; EVENTOS DEL MOUSE;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define (prueba)
+         (cond
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))95)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))20)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))85)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))40)(= turno 3))
+            (pedirCartas))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))95)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))20)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))130)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))90)(= turno 3))
+            (dejar))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))975)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))900)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))85)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))45)(= turno 2))
+            (pedirCartas))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))975)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))900)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))130)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))90)(= turno 2))
+            (print "dejar j2"))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))275)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))200)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))630)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))590)(= turno 1))
+            (pedirCartas))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))275)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))200)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))680)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))640)(= turno 1))
+            (print "dejar j1")))
+         (prueba)
+  )
+
 ;;;;;;;;;;;;;;;;;; Conexion con la lógica;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define (pedirCartas);hacer las llamadas a la lógica 
   (cond
@@ -158,11 +179,12 @@
        
 ; Función que acaba con el turno
 (define (dejar)
-  (cond((= turno 1)(set! turno 4)(set! posx 300)(masoCrupier (car Jugador2) 20)(set! turno 2))
-       ((= turno 2)(set! turno 3)(set! posY 140))
-       ((= turno 3)(set! turno 4))
+  (cond((= turno 1)(set! turno 4)(set! puntajeObtenido (cadr Jugador1))(mostrarPuntaje (number->string puntajeObtenido)1)(set! posx 300)(masoCrupier (car Jugador2) 20)(set! turno 2))
+       ((= turno 2)(set! turno 4)(set! puntajeObtenido (cadr Jugador2))(mostrarPuntaje(number->string puntajeObtenido)2)(set! posY 140)(masoCrupier (car Jugador2) 20)(set! turno 3))
+       ((= turno 3)(set! turno 4)(set! puntajeObtenido (cadr Jugador3))(mostrarPuntaje(number->string puntajeObtenido)3)(set! posY 140)(masoCrupier (car Jugador2) 20))
        ))
 
 
 
 (bCEj 3)
+
