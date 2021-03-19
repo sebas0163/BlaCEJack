@@ -46,7 +46,7 @@ Definición del maso inicial del juego
 Nombre: bCEj
 Autor: Sebastián Moya Monge
 Descripción: Función encargada de iniciar el juego, el listener y llama a dibujar el tablero según los jugadores
-Input: entero que indica la cantidad de jugadores
+Input: lista con los nombres de los jugadores
 Output: void
 |#
 (define (bCEj x)(set! ventana (open-viewport "ventana" 1000 700))
@@ -152,8 +152,8 @@ Output: void
   ((draw-solid-rectangle emergente)(make-posn 0 0) 500 200 "black")
   
   (cond
-    ((or(and(> crupier puntajeObtenido)(<= crupier 21 ))(and(< crupier puntajeObtenido)(<= crupier 21 )))((draw-string emergente)(make-posn 75 100 ) "La casa gana, el jugador ha perdido" "white"))
-    ((or(and (> puntajeObtenido crupier)(<= puntajeObtenido 21))(and(< puntajeObtenido crupier)(<= puntajeObtenido 21 )))((draw-string emergente)(make-posn 200 100 ) "¡Felicitaciones has ganado!" "white"))
+    ((or(and(> crupier puntajeObtenido)(<= crupier 21 ))(and(< crupier puntajeObtenido)(> puntajeObtenido 21 )(<= crupier 21)))((draw-string emergente)(make-posn 75 100 ) "La casa gana, el jugador ha perdido" "white"))
+    ((or(and (> puntajeObtenido crupier)(<= puntajeObtenido 21))(and(< puntajeObtenido crupier)(> crupier 21 )(<= puntajeObtenido 21)))((draw-string emergente)(make-posn 200 100 ) "¡Felicitaciones has ganado!" "white"))
     (else((draw-string emergente)(make-posn 250 100 ) "EMPATE" "white"))
     )
   (sleep 3)
@@ -291,9 +291,9 @@ Descripción: Función que termina el turno de cada jugador
 Output: void
 |#
 (define (dejar)
-  (cond((= turnos 1)(set! turnos 2)(set! casa #f)(set! puntajeObtenido (cadr Jugador1))(mostrarPuntaje (number->string puntajeObtenido)1)(set! posx 300)(guardarValores(houseDeck (car crupier) cartas)4)(masoCrupier (car crupier) (cadr crupier)))
-       ((= turnos 2)(set! turnos 3)(set! casa #f)(set! puntajeObtenido (cadr Jugador2))(mostrarPuntaje(number->string puntajeObtenido)2)(set! posY 140)(guardarValores(houseDeck (car crupier) cartas)4)(masoCrupier (car crupier) (cadr crupier)))
-       ((= turnos 3)(set! turnos 5)(set! casa #f)(set! puntajeObtenido (cadr Jugador3))(mostrarPuntaje(number->string puntajeObtenido)3)(set! posY 140)(guardarValores(houseDeck (car crupier) cartas)4)(masoCrupier (car crupier) (cadr crupier)))
+  (cond((= turnos 1)(set! turnos 2)(set! casa #f)(set! puntajeObtenido (cadr Jugador1))(mostrarPuntaje (number->string puntajeObtenido)1)(set! posx 300)(guardarValores(houseDeck (car crupier) cartas)4)(masoCrupier (reverse(car crupier)) (cadr crupier)))
+       ((= turnos 2)(set! turnos 3)(set! casa #f)(set! puntajeObtenido (cadr Jugador2))(mostrarPuntaje(number->string puntajeObtenido)2)(set! posY 140)(guardarValores(houseDeck (car crupier) cartas)4)(masoCrupier (reverse(car crupier)) (cadr crupier)))
+       ((= turnos 3)(set! turnos 5)(set! casa #f)(set! puntajeObtenido (cadr Jugador3))(mostrarPuntaje(number->string puntajeObtenido)3)(set! posY 140)(guardarValores(houseDeck (car crupier) cartas)4)(masoCrupier (reverse(car crupier)) (cadr crupier)))
        ))
 #|
 Nombre: guardarValores
