@@ -187,7 +187,8 @@ Output: void
 #|
 Nombre: revisarCartas
 Autor: Sebastián Moya Monge
-Descripción: Función encargada de dibujar la mesa para solo un jugador
+Descripción: Funcion encargada de enviar a dinujar la carta deseada
+Input: lista del jugador en turno
 Output: void
 |#
 (define (revisarCartas jugador)
