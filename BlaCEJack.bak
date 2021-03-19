@@ -1,6 +1,5 @@
 #lang racket
-(provide turno)
-(provide houseDeck)
+
 ;revisarAs
 ;Función que revisa si el valor tiene un as y el resultado de la suma de las cartas
 ;para verificar si el valor del As es de 1 o de 11

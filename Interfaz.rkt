@@ -1,4 +1,5 @@
 #lang racket
+(require "BlaCEJack.rkt")
 (require (lib "graphics.ss" "graphics"))(open-graphics)
 #|
 Definición del maso inicial del juego
@@ -17,19 +18,19 @@ Definición del maso inicial del juego
                  (13 c) (13 p) (13 d) (13 t)
                  (14 c) (14 p) (14 d) (14 t)))
 ; Lista que guardará las cartas y los puntos del jugador1
-(define Jugador1 '(((3 t)(5 c)(9 p))20))
+(define Jugador1 '(()))
 ; Lista que guardará las cartas y los puntos del jugador2
-(define Jugador2 '(((3 t)(5 c)(9 p))20))
+(define Jugador2 '(()))
 ; Lista que guardará las cartas y los puntos del jugador3
-(define Jugador3 '(((3 t)(5 c)(9 p))20))
+(define Jugador3 '(()))
 ; Lista que guardará las cartas y los puntos del crupier
-(define crupier '(((3 t)(5 c)(9 p))20))
+(define crupier '(()))
 ;Posición inicial para las cartas del jugador 1 y el crupier
 (define posx 300)
 ;Posición inicial para las cartas del jugador 2 y 3.
 (define posY 140)
 ; Variable que indica el turno actual
-(define turno 1)
+(define turnos 1)
 ;Variable que apuntará a la ventana donde todo será dibujado
 (define ventana 0)
 ; Guardará el puntaje obtenido por el jugador, mientras el crupier analiza su baraja.
@@ -174,9 +175,9 @@ Output: void
 |#
 
 (define (dibujarCarta carta)
-  (cond((and(= turno 1)casa) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posx 550))(set! posx (+ posx 35)))
-       ((and(= turno 2)casa) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 875 posY))(set! posY (+ posY 35)))
-       ((and(= turno 3)casa) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 15 posY))(set! posY (+ posY 35)))
+  (cond((and(= turnos 1)casa) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posx 550))(set! posx (+ posx 35)))
+       ((and(= turnos 2)casa) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 875 posY))(set! posY (+ posY 35)))
+       ((and(= turnos 3)casa) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn 15 posY))(set! posY (+ posY 35)))
        ((equal? casa #f) ((draw-pixmap ventana)(~a "imagenes/" carta)(make-posn posx 10))(set! posx (+ posx 35)))
   ))
 #|
@@ -187,7 +188,7 @@ Output: void
 |#
 (define (revisarCartas jugador)
   (cond((null? (car jugador))(print "no hay cartas"))
-        (else(dibujarCarta (~a(~a(caar jugador)(cadr(car jugador)))".png")))))
+        (else(dibujarCarta (~a(~a(caaar jugador)(cadr(caar jugador)))".png")))))
 
 #|
 Nombre: masoCrupier
@@ -209,20 +210,20 @@ Descripción: Función encargada de escuchar los eventos del mouse
 Output: void
 |#
 (define (control)
-  (cond((and(> turno jugadores)(not(= turno 4)))
+  (cond((and(> turnos jugadores)(not(= turnos 4)))
         (close-viewport ventana))
         (else (cond
-           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))95)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))20)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))85)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))40)(= turno 3))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))95)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))20)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))85)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))40)(= turnos 3))
             (pedirCartas))
-           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))95)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))20)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))130)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))90)(= turno 3))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))95)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))20)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))130)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))90)(= turnos 3))
             (dejar))
-           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))975)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))900)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))85)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))45)(= turno 2))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))975)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))900)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))85)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))45)(= turnos 2))
             (pedirCartas))
-           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))975)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))900)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))130)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))90)(= turno 2))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))975)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))900)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))130)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))90)(= turnos 2))
             (dejar))
-           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))275)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))200)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))630)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))590)(= turno 1))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))275)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))200)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))630)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))590)(= turnos 1))
             (pedirCartas))
-           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))275)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))200)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))680)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))640)(= turno 1))
+           ((and (<= (posn-x(mouse-click-posn (get-mouse-click ventana)))275)(>= (posn-x(mouse-click-posn (get-mouse-click ventana)))200)(<= (posn-y(mouse-click-posn (get-mouse-click ventana)))680)(>= (posn-y(mouse-click-posn (get-mouse-click ventana)))640)(= turnos 1))
             (dejar)))
          (control))
          
@@ -237,7 +238,7 @@ Output: void
   ((draw-solid-rectangle ventana)(make-posn 0 0) 1000 700 "Sea green")
   (set! puntajeObtenido 0)
   (set! posx 300)
-  (set! crupier '(((3 t)(5 c)(9 p))20)); caso de prueba, borrar
+  (set! crupier '(()))
   (set! cartas '((2 c) (2 p) (2 d) (2 t)
                  (3 c) (3 p) (3 d) (3 t)
                  (4 c) (4 p) (4 d) (4 t)
@@ -265,18 +266,18 @@ Output: void
 |#
 (define (pedirCartas);hacer las llamadas a la lógica 
   (cond
-    ((= turno 1)
+    ((= turnos 1)
      (cond
-       ((null? (car Jugador1))#|agregar llamada a lógica|#(inicio Jugador1))
-       (else (set! Jugador1 (cons '(2 t)(car Jugador1) ))(revisarCartas Jugador1))))
-    ((= turno 2)
+       ((null? (car Jugador1))(guardarValores(turno (car Jugador1)cartas)1)(inicio Jugador1))
+       (else (guardarValores(turno (car Jugador1)cartas) 1)(revisarCartas Jugador1))))
+    ((= turnos 2)
      (cond
-       ((null? (car Jugador2))(inicio Jugador2 ventana))
-       (else (set! Jugador2 (cons '(2 t)(car Jugador2) ))(revisarCartas Jugador2))))
-    ((= turno 3)
+       ((null? (car Jugador2))(guardarValores(turno (car Jugador2)cartas)2)(inicio Jugador2))
+       (else (guardarValores(turno (car Jugador2)cartas)2)(revisarCartas Jugador2))))
+    ((= turnos 3)
      (cond
-       ((null? (car Jugador3))(inicio Jugador3 ventana))
-       (else(set! Jugador3 (cons '(2 t)(car Jugador3) ))(revisarCartas Jugador3))))
+       ((null? (car Jugador3))(guardarValores(turno (car Jugador3)cartas)3)(inicio Jugador3))
+       (else(guardarValores(turno (car Jugador3)cartas)3)(revisarCartas Jugador3))))
     ))
        
 #|
@@ -286,9 +287,9 @@ Descripción: Función que termina el turno de cada jugador
 Output: void
 |#
 (define (dejar)
-  (cond((= turno 1)(set! turno 2)(set! casa #f)(set! puntajeObtenido (cadr Jugador1))(mostrarPuntaje (number->string puntajeObtenido)1)(set! posx 300)(masoCrupier (car crupier) 20))
-       ((= turno 2)(set! turno 3)(set! casa #f)(set! puntajeObtenido (cadr Jugador2))(mostrarPuntaje(number->string puntajeObtenido)2)(set! posY 140)(masoCrupier (car crupier) 20))
-       ((= turno 3)(set! turno 5)(set! casa #f)(set! puntajeObtenido (cadr Jugador3))(mostrarPuntaje(number->string puntajeObtenido)3)(set! posY 140)(masoCrupier (car crupier) 20))
+  (cond((= turnos 1)(set! turnos 2)(set! casa #f)(set! puntajeObtenido (cadr Jugador1))(mostrarPuntaje (number->string puntajeObtenido)1)(set! posx 300)(guardarValores(houseDeck (car crupier) cartas)4)(masoCrupier (car crupier) (cadr crupier)))
+       ((= turnos 2)(set! turnos 3)(set! casa #f)(set! puntajeObtenido (cadr Jugador2))(mostrarPuntaje(number->string puntajeObtenido)2)(set! posY 140)(guardarValores(houseDeck (car crupier) cartas)4)(masoCrupier (car crupier) (cadr crupier)))
+       ((= turnos 3)(set! turnos 5)(set! casa #f)(set! puntajeObtenido (cadr Jugador3))(mostrarPuntaje(number->string puntajeObtenido)3)(set! posY 140)(guardarValores(houseDeck (car crupier) cartas)4)(masoCrupier (car crupier) (cadr crupier)))
        ))
 #|
 Nombre: guardarValores
@@ -308,5 +309,5 @@ Output: void
 
 
 
-(bCEj 2)
+(bCEj 3)
 
