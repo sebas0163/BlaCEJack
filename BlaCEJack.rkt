@@ -12,7 +12,7 @@
         ))
 
 ;sumarCartas
-;función que suma las cartas 
+;función que suma los valores de las cartas 
 ;list recibe la lista de cartas 
 ;val recibe un valor para almacenar la suma  este debe ser 0
 ;As: recibe un "boolean" para saber si posee un As debe ser #f 
@@ -41,7 +41,7 @@
 
 
 ;GetCard
-;Funcion obteneque obtiene una carta de la baraja inglesa
+;Funcion que obtiene una carta de la baraja inglesa
 ;lista: lista de cartas
 ;num: posición de la carta que se desea obtener
 ;cont: posicion de la carta que se esta analizando 
@@ -91,23 +91,9 @@
               (else (list (list (cons (GetCard mainDeck elem 0) myDeck) (sumarCartas (cons (GetCard mainDeck elem 0) myDeck) 0 #f) ) (DeleteCard mainDeck (GetCard mainDeck elem 0)) ))
               ))
 
-
-;(houseDeck '() '((2 c) (2 p) (2 d) (2 t)(3 c) (3 p) (3 d) (3 t)(4 c) (4 p) (4 d) (4 t)(5 c) (5 p) (5 d) (5 t)(6 c) (6 p) (6 d) (6 t)(7 c) (7 p) (7 d) (7 t)(8 c) (8 p) (8 d) (8 t)(9 c) (9 p) (9 d) (9 t)(10 c) (10 p) (10 d) (10 t)(11 c) (11 p) (11 d) (11 t)(12 c) (12 p) (12 d) (12 t)(13 c) (13 p) (13 d) (13 t)(14 c) (14 p) (14 d) (14 t)))
-;(houseDeck '() '((2 c) (2 p) (2 d) (2 t)(3 c) (3 p) (3 d) (3 t)(4 c) (4 p) (4 d) (4 t)(5 c) (5 p) (5 d) (5 t)(6 c) (6 p) (6 d) (6 t)(7 c) (7 p) (7 d) (7 t)(8 c) (8 p) (8 d) (8 t)(9 c) (9 p) (9 d) (9 t)(10 c) (10 p) (10 d) (10 t)(11 c) (11 p) (11 d) (11 t)(12 c) (12 p) (12 d) (12 t)(13 c) (13 p) (13 d) (13 t)(14 C) (14 P) (14 D) (14 T)) (random 52))
+;(houseDeck '() '((2 c) (2 p) (2 d) (2 t)(3 c) (3 p) (3 d) (3 t)(4 c) (4 p) (4 d) (4 t)(5 c) (5 p) (5 d) (5 t)(6 c) (6 p) (6 d) (6 t)(7 c) (7 p) (7 d) (7 t)(8 c) (8 p) (8 d) (8 t)(9 c) (9 p) (9 d) (9 t)(10 c) (10 p) (10 d) (10 t)(11 c) (11 p) (11 d) (11 t)(12 c) (12 p) (12 d) (12 t)(13 c) (13 p) (13 d) (13 t)(14 C) (14 P) (14 D) (14 T)) )
 
 
 
 
-;'((2 C) (2 P) (2 D) (2 T)
-;  (3 C) (3 P) (3 D) (3 T)
-;  (4 C) (4 P) (4 D) (4 T)
-;  (5 C) (5 P) (5 D) (5 T)
-;  (6 C) (6 P) (6 D) (6 T)
-;  (7 C) (7 P) (7 D) (7 T)
-;  (8 C) (8 P) (8 D) (8 T)
-;  (9 C) (9 P) (9 D) (9 T)
-;  (10 C) (10 P) (10 D) (10 T)
-;  (11 C) (11 P) (11 D) (11 T)
-;  (12 C) (12 P) (12 D) (12 T)
-;  (13 C) (13 P) (13 D) (13 T)
-;  (14 C) (14 P) (14 D) (14 T))
+
