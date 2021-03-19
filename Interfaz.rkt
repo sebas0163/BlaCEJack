@@ -39,7 +39,8 @@ Definición del maso inicial del juego
 (define jugadores 0)
 ; Variable que indica si se puede dibujar cartas en la posción del crupier
 (define casa #t)
-; Inicio de la ejecución
+; Variable que guarda el nombre de los jugadores
+(define nombres '())
 
 #|
 Nombre: bCEj
@@ -49,12 +50,12 @@ Input: entero que indica la cantidad de jugadores
 Output: void
 |#
 (define (bCEj x)(set! ventana (open-viewport "ventana" 1000 700))
-  (set! jugadores x)
+  (set! jugadores (length x))(set! nombres x)
   ((draw-solid-rectangle ventana)(make-posn 0 0) 1000 700 "Sea green")
   (cond
-    ((= x 1)(unJugador))
-    ((= x 2)(dosJugadores))
-    ((= x 3)(tresJugadores)))
+    ((= jugadores 1)(unJugador))
+    ((= jugadores 2)(dosJugadores))
+    ((= jugadores 3)(tresJugadores)))
   (control))
 #|
 Nombre: unJugador
@@ -68,9 +69,10 @@ Output: void
   ((draw-string ventana)(make-posn 200 80) "CRUPIER")
   ((draw-string ventana)(make-posn 200 20) "PUNTAJE:")
   ((draw-string ventana)(make-posn 200 510) "PUNTAJE:")
-  ((draw-string ventana)(make-posn 200 580) "JUGADOR 1")
+  ((draw-string ventana)(make-posn 140 580) (~a "JUGADOR 1 : " (car nombres)))
   ((draw-string ventana)(make-posn 220 615) "Pedir")
   ((draw-string ventana)(make-posn 220 665) "dejar")
+  ((draw-pixmap ventana)"imagenes/mazo.png"(make-posn 450 250))
   )
 #|
 Nombre: dosJugadores
@@ -87,12 +89,13 @@ Output: void
   ((draw-string ventana)(make-posn 200 510) "PUNTAJE:")
   ((draw-string ventana)(make-posn 200 20) "PUNTAJE:")
   ((draw-string ventana)(make-posn 820 35) "PUNTAJE:")
-  ((draw-string ventana)(make-posn 200 580) "JUGADOR 1")
-  ((draw-string ventana)(make-posn 900 15) "JUGADOR 2")
+  ((draw-string ventana)(make-posn 140 580) (~a "JUGADOR 1 : " (car nombres)))
+  ((draw-string ventana)(make-posn 820 15) (~a "JUGADOR 2 : " (cadr nombres)))
   ((draw-string ventana)(make-posn 220 615) "Pedir")
   ((draw-string ventana)(make-posn 220 665) "dejar")
   ((draw-string ventana)(make-posn 920 65) "Pedir")
-  ((draw-string ventana)(make-posn 920 115) "dejar"))
+  ((draw-string ventana)(make-posn 920 115) "dejar")
+  ((draw-pixmap ventana)"imagenes/mazo.png"(make-posn 450 250)))
 #|
 Nombre: tresJugadores
 Autor: Sebastián Moya Monge
@@ -107,9 +110,9 @@ Output: void
   ((draw-solid-rectangle ventana)(make-posn 200 590) 75 40 "gray")
   ((draw-solid-rectangle ventana)(make-posn 200 640) 75 40 "gray")
   ((draw-string ventana)(make-posn 200 80) "CRUPIER")
-  ((draw-string ventana)(make-posn 200 580) "JUGADOR 1")
-  ((draw-string ventana)(make-posn 900 15) "JUGADOR 2")
-  ((draw-string ventana)(make-posn 20 15) "JUGADOR 3")
+  ((draw-string ventana)(make-posn 140 580) (~a "JUGADOR 1 : " (car nombres)))
+  ((draw-string ventana)(make-posn 820 15) (~a "JUGADOR 2 : " (cadr nombres)))
+  ((draw-string ventana)(make-posn 20 15) (~a "JUGADOR 3 : " (caddr nombres)))
   ((draw-string ventana)(make-posn 200 510) "PUNTAJE:")
   ((draw-string ventana)(make-posn 200 20) "PUNTAJE:")
   ((draw-string ventana)(make-posn 820 35) "PUNTAJE:")
@@ -120,6 +123,7 @@ Output: void
   ((draw-string ventana)(make-posn 920 115) "dejar")
   ((draw-string ventana)(make-posn 40 65) "Pedir")
   ((draw-string ventana)(make-posn 40 115) "dejar")
+  ((draw-pixmap ventana)"imagenes/mazo.png"(make-posn 450 250))
   )
 
 #|
